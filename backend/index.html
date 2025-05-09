@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EdConnect System Architecture Diagram</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .mermaid {
+      margin: 20px 0;
+    }
+  </style>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ 
+      startOnLoad: true,
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+  </script>
+</head>
+<body>
+  <h1>EdConnect System Architecture Diagram</h1>
+
+  <div class="mermaid">
+    graph TD
+      %% Frontend Components
+      subgraph Frontend
+        subgraph School
+          S1[School Reg] & S2[Student Mgmt]
+          S3[Request Create] & S4[Dashboard]
+        end
+        
+        subgraph Student
+          ST1[Dashboard] & ST2[Calendar]
+          ST3[Test Section] & ST4[Meeting Join]
+        end
+
+        subgraph Volunteer
+          V1[Volunteer Reg] & V2[Request Mgmt]
+          V3[Meeting Sched] & V4[Test Create]
+          V5[Profile & Stats]
+        end
+      end
+
+      %% Backend APIs
+      subgraph Backend
+        B1[Auth] & B2[School]
+        B3[Student] & B4[Volunteer]
+        B5[Meeting] & B6[Test]
+        B7[Request]
+      end
+
+      %% Database Collections
+      subgraph Database
+        SchoolDB[(School DB)] & StudentDB[(Student DB)]
+        VolunteerDB[(Volunteer DB)] & RequestDB[(Request DB)]
+        MeetingDB[(Meeting DB)] & TestDB[(Test DB)]
+      end
+
+      %% External Services
+      subgraph Services
+        ZC[ZegoCloud SDK]
+      end
+
+      %% Frontend to Backend Connections
+      School --> B2
+      Student --> B3
+      Volunteer --> B4
+
+      %% Backend to Database Connections
+      B2 --> SchoolDB
+      B3 --> StudentDB
+      B4 --> VolunteerDB
+      B5 --> MeetingDB
+      B6 --> TestDB
+      B7 --> RequestDB
+
+      %% Backend to External Services
+      B5 --> ZC
+
+      %% Styling
+      classDef frontend fill:#f9f,stroke:#333,stroke-width:2px
+      classDef backend fill:#bbf,stroke:#333,stroke-width:2px
+      classDef database fill:#ff9,stroke:#333,stroke-width:2px
+      classDef services fill:#bfb,stroke:#333,stroke-width:2px
+
+      class Frontend frontend
+      class Backend backend
+      class Database database
+      class Services services
+  </div>
+
+  <h2>Key Components:</h2>
+  <ul>
+    <li><strong>Frontend:</strong> React-based application with three main sections (School, Student, Volunteer)</li>
+    <li><strong>Backend:</strong> Node.js/Express server with separate APIs for each component</li>
+    <li><strong>Database:</strong> MongoDB collections for each component</li>
+    <li><strong>External Services:</strong> ZegoCloud SDK for video meeting integration</li>
+  </ul>
+</body>
+</html>
